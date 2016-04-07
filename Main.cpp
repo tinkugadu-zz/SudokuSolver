@@ -48,6 +48,7 @@ int main(int argc, char* argv[])
 //        cout<<endl;
         ++line;
     }
+    filePtr.close();
     cout<<"done reading file"<<endl;
     mySudoku.printPuzzle();
     if(!mySudoku.Valid())
@@ -55,7 +56,7 @@ int main(int argc, char* argv[])
         cout<<"The puzzle provided is invalid"<<endl;
         exit(-1);
     }
-    filePtr.close();
+    cout<<"lets get the puzzle solved.........."<<endl;
     return 0;
 }
 

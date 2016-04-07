@@ -68,12 +68,14 @@ void Sudoku::printRow(uint row)
     cout<<endl;
 }
 
-bool Sudoku::Valid()
+bool Sudoku::Valid(bool checkComplete)
 {
     //check row, column and zone sanity
     for(int i=0; i<_size; ++i)
     {
-        if(!IsValidRow(i) || !IsValidColumn(i) || !IsValidZone(i))
+        if(!IsValidRow(i, checkComplete) || 
+            !IsValidColumn(i, checkComplete) ||
+             !IsValidZone(i, checkComplete))
         {
             cout<<"invalid detected at index: "<<(i+1)<<endl;
             return false;
@@ -82,7 +84,7 @@ bool Sudoku::Valid()
     return true;
 }
 
-bool Sudoku::IsValidRow(int row)
+bool Sudoku::IsValidRow(int row, bool checkComplete)
 {
     int tmpArr[] = {0,0,0,0,0,0,0,0,0};
     for(int i=0; i<_size; ++i)
@@ -91,6 +93,10 @@ bool Sudoku::IsValidRow(int row)
         if(ind == 0)
         {
             continue;
+        }
+        else if(checkComplete)
+        {
+            return false;
         }
         else
         {
@@ -109,7 +115,7 @@ bool Sudoku::IsValidRow(int row)
     return true;
 }
 
-bool Sudoku::IsValidColumn(int col)
+bool Sudoku::IsValidColumn(int col, bool checkComplete)
 {
     int tmpArr[] = {0,0,0,0,0,0,0,0,0};
     for(int i=0; i<_size; ++i)
@@ -118,6 +124,10 @@ bool Sudoku::IsValidColumn(int col)
         if(ind == 0)
         {
             continue;
+        }
+        else if(checkComplete)
+        {
+            return false;
         }
         else
         {
@@ -136,7 +146,8 @@ bool Sudoku::IsValidColumn(int col)
     return true;
 }
 
-bool Sudoku::IsValidZone(int zone)
+bool Sudoku::IsValidZone(int zone, bool checkComplete)
 {
     return true;
 }
+

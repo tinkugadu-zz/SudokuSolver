@@ -148,6 +148,10 @@ bool Sudoku::IsValidColumn(int col, bool checkComplete)
 
 bool Sudoku::IsValidZone(int zone, bool checkComplete)
 {
+    auto row_st = 0;
+    auto row_end = 0;
+    auto col_st = 0;
+    auto col_end = 0;
     return true;
 }
 

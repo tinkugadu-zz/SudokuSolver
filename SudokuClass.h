@@ -6,19 +6,22 @@
 typedef std::vector<int> Row;
 typedef std::vector<Row> Puzzle;
 typedef std::map<int, Row> PROBS;
-
+typedef unsigned int uint;
 class Sudoku
 {
     Sudoku(Sudoku &cpy) = delete;
     PROBS _possibValues;
-    int **_puzzle;
+    int _size;
+    int _sqSize;
 public:
-    Sudoku(int siz, int ssiz);
+    Sudoku(int siz);
     ~Sudoku();
     //setters and getters
-    bool setRow(int row, int *arr);
-    bool getRow(int row, int *arr) const;
-    bool setVal(int row, int col, int &val);
-    bool getVal(int row, int col, int &val) const;
+    bool setRow(uint row, int *arr);
+    bool getRow(uint row, int *arr) const;
+    bool setVal(uint row, uint col, int val);
+    bool getVal(uint row, uint col, int &val) const;
+    void printPuzzle();
+    void printRow(uint row);
 };
 #endif

@@ -1,6 +1,6 @@
 #ifndef SUDOKU_CLASS_H
 #define SUDOKU_CLASS_H
-
+#include "utils.h"
 #include <map>
 
 typedef std::vector<int> Row;
@@ -13,6 +13,7 @@ class Sudoku
     PROBS _possibValues;
     int _size;
     int _sqSize;
+    int **_puzzle;
 public:
     Sudoku(int siz);
     ~Sudoku();

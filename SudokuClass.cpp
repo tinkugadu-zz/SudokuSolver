@@ -7,7 +7,7 @@ Sudoku::Sudoku(int siz) : _size(siz)
     _puzzle = (int* *)malloc(_size*sizeof(int *));
     for(int i=0; i<_size; ++i)
     {
-	_puzzle[i] = calloc((size_t)_size, sizeof(int));
+	_puzzle[i] = (int *)calloc((size_t)_size, sizeof(int));
     }
 }
 
@@ -26,14 +26,14 @@ bool Sudoku::setRow(uint row, int *arr)
     {
 	return false;
     }    
-    memcpy(_puzzle[i], arr, _size*sizeof(int));
+    memcpy(_puzzle[row], arr, _size*sizeof(int));
     return true;
 }
 
-bool Sudoku::getRow(uint row, int *arr)
+bool Sudoku::getRow(uint row, int *arr) const
 {
     if(!arr) return false;
-    memcpy(arr, _puzzle[i], _size*sizeof(int));
+    memcpy(arr, _puzzle[row], _size*sizeof(int));
     return true;
 }
 
@@ -44,7 +44,7 @@ bool Sudoku::setVal(uint row, uint col, int val)
     return true;
 }
 
-bool Sudoku::getVal(uint row, uint col, int &val)
+bool Sudoku::getVal(uint row, uint col, int &val) const
 {
     if((row > 9) || (col > 9)) return false;
     val = _puzzle[row][col];

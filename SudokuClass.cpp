@@ -68,3 +68,75 @@ void Sudoku::printRow(uint row)
     cout<<endl;
 }
 
+bool Sudoku::Valid()
+{
+    //check row, column and zone sanity
+    for(int i=0; i<_size; ++i)
+    {
+        if(!IsValidRow(i) || !IsValidColumn(i) || !IsValidZone(i))
+        {
+            cout<<"invalid detected at index: "<<(i+1)<<endl;
+            return false;
+        }
+    }
+    return true;
+}
+
+bool Sudoku::IsValidRow(int row)
+{
+    int tmpArr[] = {0,0,0,0,0,0,0,0,0};
+    for(int i=0; i<_size; ++i)
+    {
+        auto ind = _puzzle[row][i];
+        if(ind == 0)
+        {
+            continue;
+        }
+        else
+        {
+            --ind;
+        }
+        if(tmpArr[ind] != 0)    
+        {
+            cout<<"invalid row value: ("<<(row+1)<<" , "<<(i+1)<<")"<<endl;
+            return false;
+        }
+        else
+        {
+            ++tmpArr[ind];
+        }
+    }
+    return true;
+}
+
+bool Sudoku::IsValidColumn(int col)
+{
+    int tmpArr[] = {0,0,0,0,0,0,0,0,0};
+    for(int i=0; i<_size; ++i)
+    {
+        auto ind = _puzzle[i][col];
+        if(ind == 0)
+        {
+            continue;
+        }
+        else
+        {
+            --ind;
+        }        
+        if(tmpArr[ind] != 0)
+        {
+            cout<<"invalid row value: ("<<(i+1)<<" , "<<(col+1)<<")"<<endl;
+            return false;
+        }
+        else
+        {
+            ++tmpArr[ind];
+        }
+    }
+    return true;
+}
+
+bool Sudoku::IsValidZone(int zone)
+{
+    return true;
+}

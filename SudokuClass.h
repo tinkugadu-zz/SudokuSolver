@@ -14,6 +14,9 @@ class Sudoku
     int _size;
     int _sqSize;
     int **_puzzle;
+    bool IsValidRow(int row);
+    bool IsValidColumn(int col);
+    bool IsValidZone(int zone);
 public:
     Sudoku(int siz);
     ~Sudoku();
@@ -24,5 +27,6 @@ public:
     bool getVal(uint row, uint col, int &val) const;
     void printPuzzle();
     void printRow(uint row);
+    bool Valid();
 };
 #endif

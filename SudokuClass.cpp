@@ -92,11 +92,11 @@ bool Sudoku::IsValidRow(int row, bool checkComplete)
         auto ind = _puzzle[row][i];
         if(ind == 0)
         {
+            if(checkComplete)
+            {
+                return false;
+            }
             continue;
-        }
-        else if(checkComplete)
-        {
-            return false;
         }
         else
         {
@@ -123,11 +123,11 @@ bool Sudoku::IsValidColumn(int col, bool checkComplete)
         auto ind = _puzzle[i][col];
         if(ind == 0)
         {
+            if(checkComplete)
+            {
+                return false;
+            }
             continue;
-        }
-        else if(checkComplete)
-        {
-            return false;
         }
         else
         {
@@ -135,7 +135,7 @@ bool Sudoku::IsValidColumn(int col, bool checkComplete)
         }        
         if(tmpArr[ind] != 0)
         {
-            cout<<"invalid row value: ("<<(i+1)<<" , "<<(col+1)<<")"<<endl;
+            cout<<"invalid column value: ("<<(i+1)<<" , "<<(col+1)<<")"<<endl;
             return false;
         }
         else
@@ -148,10 +148,41 @@ bool Sudoku::IsValidColumn(int col, bool checkComplete)
 
 bool Sudoku::IsValidZone(int zone, bool checkComplete)
 {
-    auto row_st = 0;
-    auto row_end = 0;
-    auto col_st = 0;
-    auto col_end = 0;
+    int tmpArr[] = {0,0,0,0,0,0,0,0,0};
+    int row = zone/_sqSize;
+    int col = zone%_sqSize;
+    auto row_st = row*_sqSize;
+    auto row_end = row_st + _sqSize-1;
+    auto col_st = col*_sqSize;
+    auto col_end = col_st + _sqSize-1;
+    for(auto i=row_st; i<=row_end; ++i)
+    {
+        for(auto j=col_st; j<=col_end; ++j)
+        {
+            auto ind = _puzzle[i][j];
+            if(ind == 0)
+            {
+                if(checkComplete)
+                {
+                    return false;
+                }
+                continue;
+            }
+            else
+            {
+                --ind;
+            }
+            if(tmpArr[ind] != 0)
+            {
+                cout<<"invalid zone value: ("<<(i+1)<<" , "<<(j+1)<<")"<<endl;
+                return false;                
+            }
+            else
+            {
+                ++tmpArr[ind];
+            }            
+        }
+    }
     return true;
 }
 

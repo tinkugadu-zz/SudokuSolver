@@ -17,6 +17,7 @@ class Sudoku
     bool IsValidRow(int row, bool checkComplete=false);
     bool IsValidColumn(int col, bool checkComplete=false);
     bool IsValidZone(int zone, bool checkComplete=false);
+    Row getPossibles(int i, int j);
 public:
     Sudoku(int siz);
     ~Sudoku();
@@ -28,5 +29,6 @@ public:
     void printPuzzle();
     void printRow(uint row);
     bool Valid(bool checkComplete=false);
+    void FillInitialPossibilities();
 };
 #endif

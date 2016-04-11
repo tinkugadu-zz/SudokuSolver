@@ -186,3 +186,75 @@ bool Sudoku::IsValidZone(int zone, bool checkComplete)
     return true;
 }
 
+//the actual puzzle is solved
+void Sudoku::FillInitialPossibilities()
+{
+    for(auto i=0; i<_size; ++i)
+    {
+        for(auto j=0; j<_size; ++j)
+        {
+            if(_puzzle[i][j] != 0)
+            {
+            //its already solved. continue with other cells
+                continue;
+            }
+            _possibValues[(i*9)+j] = getPossibles(i, j);
+        }
+    }
+}
+
+void Sudoku::PrintPossibilities()
+{
+    PROBS::iterator it;
+    ROW::iterator rit;
+    for(it = _possibValues.begin(); it != _possibValues.end(); ++it)
+    {
+        auto val = it->first;
+        cout<<"possible values: @("<<val/_size+1<<","<<
+        auto tmpRow = it->second;
+        for(rit = tmpRow.begin(); rit != tmpRow.end(); ++rit)
+        {
+            cout<<
+        }
+    }
+}
+
+Row Sudoku::getPossibles(int i, int j)
+{
+    //              1,2,3,4,5,6,7,8,9
+    int tmpArr[] = {0,0,0,0,0,0,0,0,0};    
+    Row tmpRow;
+    if(_puzzle[i][j] != 0)
+    {
+        return tmpRow;
+    }
+    //check possibles in row
+    for(auto c=0; c<_size; ++c)
+    {
+        ++tmpArr[_puzzle[i][c]-1];
+    }
+    for(auto r=0; r<_size; ++r)
+    {
+        ++tmpArr[_puzzle[r][j]-1];
+    }
+    auto row_st = i/_sqSize;
+    auto row_end = row_st + _sqSize-1;
+    auto col_st = j/_sqSize;
+    auto col_end = col_st + _sqSize-1;
+    for(auto r=row_st; r<=row_end; ++r)
+    {
+        for(auto c=col_st; c<=col_end; ++c)
+        {
+            ++tmpArr[_puzzle[r][c]-1];
+        }
+    }
+    for(auto ii = 0; ii<_size; ++ii)
+    {
+        if(tmpArr[ii] == 0)
+        {
+            tmpRow.push_back(ii+1);
+        }
+    }
+    return tmpRow;
+}
+

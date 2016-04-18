@@ -180,7 +180,7 @@ bool Sudoku::IsValidZone(int zone, bool checkComplete)
             else
             {
                 ++tmpArr[ind];
-            }            
+            }
         }
     }
     return true;
@@ -211,41 +211,63 @@ void Sudoku::PrintPossibilities()
     {
         auto val = it->first;
         auto tmpRow = it->second;
+        auto tmpind_i = val/_size + 1;
+        auto tmpind_j = val%_size + 1;
+        cout<<"possibilities at ["<<tmpind_i<<" , "<<tmpind_j<<"] -- ";
         for(rit = tmpRow.begin(); rit != tmpRow.end(); ++rit)
         {
+            cout<<*rit<<"\t";
         }
+        cout<<endl;
     }
 }
 
 Row Sudoku::getPossibles(int i, int j)
 {
     //              1,2,3,4,5,6,7,8,9
-    int tmpArr[] = {0,0,0,0,0,0,0,0,0};    
+    int tmpArr[] = {0,0,0,0,0,0,0,0,0};
     Row tmpRow;
     if(_puzzle[i][j] != 0)
     {
         return tmpRow;
     }
     //check possibles in row
+//    cout<<"values checkd for "<<i<<" , "<<j<<endl;
     for(auto c=0; c<_size; ++c)
     {
+        if(_puzzle[i][c] == 0)
+        {
+            continue;
+        }
         ++tmpArr[_puzzle[i][c]-1];
+//        cout<<"DEBUG: puzzle["<<i<<" , "<<c<<"] -- "<<_puzzle[i][c]<<endl;
     }
     for(auto r=0; r<_size; ++r)
     {
+        if(_puzzle[r][j] == 0)
+        {
+            continue;
+        }
         ++tmpArr[_puzzle[r][j]-1];
+//        cout<<"DEBUG: puzzle["<<r<<" , "<<j<<"] -- "<<_puzzle[r][j]<<endl;
     }
-    auto row_st = i/_sqSize;
+    auto row_st = (i/_sqSize)*_sqSize;
     auto row_end = row_st + _sqSize-1;
-    auto col_st = j/_sqSize;
+    auto col_st = (j/_sqSize)*_sqSize;
     auto col_end = col_st + _sqSize-1;
     for(auto r=row_st; r<=row_end; ++r)
     {
         for(auto c=col_st; c<=col_end; ++c)
         {
+            if(_puzzle[r][c] == 0)
+            {
+                continue;
+            }
             ++tmpArr[_puzzle[r][c]-1];
+//            cout<<"DEBUG: puzzle["<<r<<" , "<<c<<"] -- "<<_puzzle[r][c]<<endl;
         }
     }
+//    printTmpArr(tmpArr, 9, i, j);
     for(auto ii = 0; ii<_size; ++ii)
     {
         if(tmpArr[ii] == 0)
@@ -256,3 +278,102 @@ Row Sudoku::getPossibles(int i, int j)
     return tmpRow;
 }
 
+void Sudoku::printTmpArr(int *arr, int size, int i, int j)
+{
+    cout<<"DEBUG: tmparr for ["<<i<<" , "<<j<<"] "<<endl;
+    for(auto i=0; i<size; ++i)
+    {
+        cout<<arr[i]<<"\t";
+    }
+    cout<<endl;
+}
+
+void Sudoku::UpdatePossibles(int i, int j)
+{
+    auto ind = 0;
+    //update possible values in all columns of that row
+    for(auto c=0; c<_size; ++c)
+    {
+        ind = (i*_size)+c;
+        auto it = _possibValues.find(ind);
+        if(it == _possibValues.end())
+        {
+        //There is no vector at this ind, so continue
+            continue;
+        }
+        for(auto itr = it->second.begin(); itr != it->second.end(); ++itr)
+        {
+            if(*itr == _puzzle[i][j])
+            {
+                it->second.erase(itr);
+            }
+        }
+    }
+    
+    //update possible values in all rows of that column
+    for(auto r=0; r<_size; ++r)
+    {
+        ind = (r*_size)+j;
+        auto it = _possibValues.find(ind);
+        if(it == _possibValues.end())
+        {
+        //There is no vector at this ind, so continue
+            continue;
+        }
+        for(auto itr = it->second.begin(); itr != it->second.end(); ++itr)
+        {
+            if(*itr == _puzzle[i][j])
+            {
+                it->second.erase(itr);
+            }
+        }
+    }
+
+    auto row_st = (i/_sqSize)*_sqSize;
+    auto row_end = row_st + _sqSize -1;
+    auto col_st = (j/_sqSize)*_sqSize;
+    auto col_end = col_st + _sqSize -1;
+    for(auto ii = row_st; ii <= row_end; ++ii)
+    {
+        for(auto jj = col_st; jj <= col_end; ++jj)
+        {
+            ind = (ii*_size) + jj;
+            auto it = _possibValues.find(ind);
+            if(it == _possibValues.end())
+            {
+                continue;
+            }
+            for(auto itr = it->second.begin(); itr != it->second.end(); ++itr)
+            {
+                if(*itr == _puzzle[i][j])
+                {
+                    it->second.erase(itr);
+                }
+            }
+        }
+    }
+}
+
+void Sudoku::Solve()
+{
+    auto iter = 0;
+    auto nextIter = true;
+    while(nextIter)
+    {
+        nextIter = false;
+        for(auto it = _possibValues.begin(); it != _possibValues.end();
+                ++it)
+        {
+            if(it->second.size() == 1)
+            {
+                auto ind = it->first;
+                UpdatePossibles(ind/_size, ind%_size);
+                nextIter = true;
+                _possibValues.erase(it->first);
+            }
+        }
+        ++iter;
+    }
+    cout<<"total iterations processed: "<<iter<<endl;
+    cout<<"solved puzzle:" <<endl;
+}

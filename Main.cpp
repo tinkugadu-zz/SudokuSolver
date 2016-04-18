@@ -38,14 +38,14 @@ int main(int argc, char* argv[])
             perror(ss.str().c_str());
             exit(-1);
         }
-//        cout<<"processing line: "<<line<<endl;
+//    cout<<"processing line: "<<line<<endl;
         for(int i=0; i<size; ++i)
         {
             auto tmpVal = getInt(tmpStr[i]);
 //            cout<<tmpVal<<"\t";
             mySudoku.setVal(line, i, tmpVal);
         }
-//        cout<<endl;
+//       cout<<endl;
         ++line;
     }
     filePtr.close();
@@ -57,6 +57,10 @@ int main(int argc, char* argv[])
         exit(-1);
     }
     cout<<"lets get the puzzle solved.........."<<endl;
+    mySudoku.FillInitialPossibilities();
+    mySudoku.Solve();
+    mySudoku.printPuzzle();
+    mySudoku.PrintPossibilities();
     return 0;
 }
 

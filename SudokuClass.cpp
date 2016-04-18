@@ -25,7 +25,7 @@ bool Sudoku::setRow(uint row, int *arr)
     if(!arr)
     {
 	    return false;
-    }    
+    }
     memcpy(_puzzle[row], arr, _size*sizeof(int));
     return true;
 }
@@ -55,7 +55,7 @@ void Sudoku::printPuzzle()
 {
     for(uint i=0; i<_size; ++i)
     {
-	printRow(i);
+    	printRow(i);
     }
 }
 
@@ -63,7 +63,7 @@ void Sudoku::printRow(uint row)
 {
     for(uint i=0; i<_size; ++i)
     {
-	cout<<_puzzle[row][i]<<"\t";
+    	cout<<_puzzle[row][i]<<"\t";
     }
     cout<<endl;
 }
@@ -206,15 +206,13 @@ void Sudoku::FillInitialPossibilities()
 void Sudoku::PrintPossibilities()
 {
     PROBS::iterator it;
-    ROW::iterator rit;
+    Row::iterator rit;
     for(it = _possibValues.begin(); it != _possibValues.end(); ++it)
     {
         auto val = it->first;
-        cout<<"possible values: @("<<val/_size+1<<","<<
         auto tmpRow = it->second;
         for(rit = tmpRow.begin(); rit != tmpRow.end(); ++rit)
         {
-            cout<<
         }
     }
 }

@@ -39,14 +39,14 @@ bool Sudoku::getRow(uint row, int *arr) const
 
 bool Sudoku::setVal(uint row, uint col, int val)
 {
-    if((row > 9) || (col > 9)) return false;
+    if((row >= _size) || (col >= _size)) return false;
     _puzzle[row][col] = val;
     return true;
 }
 
 bool Sudoku::getVal(uint row, uint col, int &val) const
 {
-    if((row > 9) || (col > 9)) return false;
+    if((row >= _size) || (col >= _size)) return false;
     val = _puzzle[row][col];
     return true;
 }
@@ -68,6 +68,7 @@ void Sudoku::printRow(uint row)
     cout<<endl;
 }
 
+//validate given puzzle
 bool Sudoku::Valid(bool checkComplete)
 {
     //check row, column and zone sanity
@@ -198,7 +199,7 @@ void Sudoku::FillInitialPossibilities()
             //its already solved. continue with other cells
                 continue;
             }
-            _possibValues[(i*9)+j] = getPossibles(i, j);
+            _possibValues[(i*_size)+j] = getPossibles(i, j);
         }
     }
 }
@@ -213,7 +214,7 @@ void Sudoku::PrintPossibilities()
         auto tmpRow = it->second;
         auto tmpind_i = val/_size + 1;
         auto tmpind_j = val%_size + 1;
-        cout<<"possibilities at ["<<tmpind_i<<" , "<<tmpind_j<<"] -- ";
+        cout<<"possibilities for size: "<<tmpRow.size()<<" at ["<<tmpind_i<<" , "<<tmpind_j<<"] -- ";
         for(rit = tmpRow.begin(); rit != tmpRow.end(); ++rit)
         {
             cout<<*rit<<"\t";
@@ -291,25 +292,31 @@ void Sudoku::printTmpArr(int *arr, int size, int i, int j)
 void Sudoku::UpdatePossibles(int i, int j)
 {
     auto ind = 0;
+    cout<<"DEBUG: getting into updatePossibles method"<<endl;
     //update possible values in all columns of that row
     for(auto c=0; c<_size; ++c)
     {
-        ind = (i*_size)+c;
+        ind = (i*_size) + c;
         auto it = _possibValues.find(ind);
         if(it == _possibValues.end())
         {
         //There is no vector at this ind, so continue
+            cout<<"DEBUG[UPDATEPOSSIBLES] -- row, col: "<<i<<" , "<<c<<endl;
             continue;
         }
+        cout<<"DEBUG[UPDATEPOSSIBLES] vector size: "<<it->second.size()<<" and ind is: "<<ind<<endl;
         for(auto itr = it->second.begin(); itr != it->second.end(); ++itr)
         {
+            cout<<"DEBUG[UPDATEPOSSIBLES] in row iterator: "<<*itr<<endl;
             if(*itr == _puzzle[i][j])
             {
                 it->second.erase(itr);
             }
         }
+        cout<<"DEBUG[UPDATEPOSSIBLES] -- row, col: "<<i<<" , "<<c<<endl;
     }
     
+    cout<<"DEBUG[updatePossibles]: updated possible rows "<<endl;
     //update possible values in all rows of that column
     for(auto r=0; r<_size; ++r)
     {
@@ -333,6 +340,7 @@ void Sudoku::UpdatePossibles(int i, int j)
     auto row_end = row_st + _sqSize -1;
     auto col_st = (j/_sqSize)*_sqSize;
     auto col_end = col_st + _sqSize -1;
+    cout<<"DEBUG[updatePossibles]: updated possible cols "<<endl;
     for(auto ii = row_st; ii <= row_end; ++ii)
     {
         for(auto jj = col_st; jj <= col_end; ++jj)
@@ -352,6 +360,7 @@ void Sudoku::UpdatePossibles(int i, int j)
             }
         }
     }
+    cout<<"DEBUG: RETURN from updatePossibles method"<<endl;
 }
 
 void Sudoku::Solve()
@@ -367,9 +376,14 @@ void Sudoku::Solve()
             if(it->second.size() == 1)
             {
                 auto ind = it->first;
-                UpdatePossibles(ind/_size, ind%_size);
+                auto row = ind/_size;
+                auto col = ind%_size;
+                cout<<"DEBUG: ["<<row<<" , "<<col<<"] -- "<<it->second.back()<<endl;
+                setVal(row, col, it->second.back());
                 nextIter = true;
-                _possibValues.erase(it->first);
+                cout<<"DEBUG: code reached here"<<endl;
+                _possibValues.erase(it);
+                UpdatePossibles(row, col);
             }
         }
         ++iter;

@@ -58,9 +58,9 @@ int main(int argc, char* argv[])
     }
     cout<<"lets get the puzzle solved.........."<<endl;
     mySudoku.FillInitialPossibilities();
+    mySudoku.PrintPossibilities();
     mySudoku.Solve();
     mySudoku.printPuzzle();
-    mySudoku.PrintPossibilities();
     return 0;
 }
 

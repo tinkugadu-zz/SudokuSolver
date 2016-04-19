@@ -1,7 +1,9 @@
-/*********************************
+/****************************************
 *Created by: Sudeepth Araveti
 *Date      : 4/19/2016
-*********************************/
+*SudokuClass. Puzzle is in the form of
+*this object.
+*****************************************/
 #include "SudokuClass.h"
 #include <math.h>
 

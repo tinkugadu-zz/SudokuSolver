@@ -292,34 +292,36 @@ void Sudoku::printTmpArr(int *arr, int size, int i, int j)
 void Sudoku::UpdatePossibles(int i, int j)
 {
     auto ind = 0;
+    Row::iterator tmpRowIt;
+    bool found = false;
     cout<<"DEBUG: getting into updatePossibles method"<<endl;
     //update possible values in all columns of that row
     for(auto c=0; c<_size; ++c)
     {
+        found = false;
         ind = (i*_size) + c;
         auto it = _possibValues.find(ind);
         if(it == _possibValues.end())
         {
         //There is no vector at this ind, so continue
-            cout<<"DEBUG[UPDATEPOSSIBLES] -- row, col: "<<i<<" , "<<c<<endl;
             continue;
         }
-        cout<<"DEBUG[UPDATEPOSSIBLES] vector size: "<<it->second.size()<<" and ind is: "<<ind<<endl;
         for(auto itr = it->second.begin(); itr != it->second.end(); ++itr)
         {
-            cout<<"DEBUG[UPDATEPOSSIBLES] in row iterator: "<<*itr<<endl;
             if(*itr == _puzzle[i][j])
             {
-                it->second.erase(itr);
+                tmpRowIt = itr;
+                found = true;
+                break;
             }
         }
-        cout<<"DEBUG[UPDATEPOSSIBLES] -- row, col: "<<i<<" , "<<c<<endl;
+        if(found) it->second.erase(tmpRowIt);
     }
     
-    cout<<"DEBUG[updatePossibles]: updated possible rows "<<endl;
     //update possible values in all rows of that column
     for(auto r=0; r<_size; ++r)
     {
+        found = false;
         ind = (r*_size)+j;
         auto it = _possibValues.find(ind);
         if(it == _possibValues.end())
@@ -331,20 +333,23 @@ void Sudoku::UpdatePossibles(int i, int j)
         {
             if(*itr == _puzzle[i][j])
             {
-                it->second.erase(itr);
+                tmpRowIt = itr;
+                found = true;
+                break;
             }
         }
+        if(found)  it->second.erase(tmpRowIt);
     }
 
     auto row_st = (i/_sqSize)*_sqSize;
     auto row_end = row_st + _sqSize -1;
     auto col_st = (j/_sqSize)*_sqSize;
     auto col_end = col_st + _sqSize -1;
-    cout<<"DEBUG[updatePossibles]: updated possible cols "<<endl;
     for(auto ii = row_st; ii <= row_end; ++ii)
     {
         for(auto jj = col_st; jj <= col_end; ++jj)
         {
+            found = false;
             ind = (ii*_size) + jj;
             auto it = _possibValues.find(ind);
             if(it == _possibValues.end())
@@ -355,9 +360,12 @@ void Sudoku::UpdatePossibles(int i, int j)
             {
                 if(*itr == _puzzle[i][j])
                 {
-                    it->second.erase(itr);
+                    tmpRowIt = itr;
+                    found = true;
+                    break;
                 }
             }
+            if(found) it->second.erase(tmpRowIt);
         }
     }
     cout<<"DEBUG: RETURN from updatePossibles method"<<endl;
@@ -381,7 +389,6 @@ void Sudoku::Solve()
                 cout<<"DEBUG: ["<<row<<" , "<<col<<"] -- "<<it->second.back()<<endl;
                 setVal(row, col, it->second.back());
                 nextIter = true;
-                cout<<"DEBUG: code reached here"<<endl;
                 _possibValues.erase(it);
                 UpdatePossibles(row, col);
             }

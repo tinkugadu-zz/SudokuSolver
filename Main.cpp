@@ -60,6 +60,10 @@ int main(int argc, char* argv[])
     mySudoku.FillInitialPossibilities();
     mySudoku.PrintPossibilities();
     mySudoku.Solve();
+    if(!mySudoku.Valid(true))
+    {
+        cout<<"The puzzle is not completed yet. :("<<endl;
+    }
     mySudoku.printPuzzle();
     return 0;
 }

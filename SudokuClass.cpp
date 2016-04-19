@@ -1,3 +1,7 @@
+/*********************************
+*Created by: Sudeepth Araveti
+*Date      : 4/19/2016
+*********************************/
 #include "SudokuClass.h"
 #include <math.h>
 

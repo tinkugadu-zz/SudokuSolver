@@ -20,6 +20,7 @@ class Sudoku
     Row getPossibles(int i, int j);
     void printTmpArr(int *arr, int size, int i, int j);
     void UpdatePossibles(int i, int j);
+    Row::iterator find(Row &tmpRow, int val);
 public:
     Sudoku(int siz);
     ~Sudoku();

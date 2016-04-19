@@ -306,16 +306,8 @@ void Sudoku::UpdatePossibles(int i, int j)
         //There is no vector at this ind, so continue
             continue;
         }
-        for(auto itr = it->second.begin(); itr != it->second.end(); ++itr)
-        {
-            if(*itr == _puzzle[i][j])
-            {
-                tmpRowIt = itr;
-                found = true;
-                break;
-            }
-        }
-        if(found) it->second.erase(tmpRowIt);
+        tmpRowIt = find(it->second, _puzzle[i][j]);
+        if(tmpRowIt != it->second.end()) it->second.erase(tmpRowIt);
     }
     
     //update possible values in all rows of that column
@@ -329,16 +321,8 @@ void Sudoku::UpdatePossibles(int i, int j)
         //There is no vector at this ind, so continue
             continue;
         }
-        for(auto itr = it->second.begin(); itr != it->second.end(); ++itr)
-        {
-            if(*itr == _puzzle[i][j])
-            {
-                tmpRowIt = itr;
-                found = true;
-                break;
-            }
-        }
-        if(found)  it->second.erase(tmpRowIt);
+        tmpRowIt = find(it->second, _puzzle[i][j]);
+        if(tmpRowIt != it->second.end()) it->second.erase(tmpRowIt);
     }
 
     auto row_st = (i/_sqSize)*_sqSize;
@@ -356,16 +340,8 @@ void Sudoku::UpdatePossibles(int i, int j)
             {
                 continue;
             }
-            for(auto itr = it->second.begin(); itr != it->second.end(); ++itr)
-            {
-                if(*itr == _puzzle[i][j])
-                {
-                    tmpRowIt = itr;
-                    found = true;
-                    break;
-                }
-            }
-            if(found) it->second.erase(tmpRowIt);
+            tmpRowIt = find(it->second, _puzzle[i][j]);
+            if(tmpRowIt != it->second.end())  it->second.erase(tmpRowIt);
         }
     }
     cout<<"DEBUG: RETURN from updatePossibles method"<<endl;
@@ -397,4 +373,17 @@ void Sudoku::Solve()
     }
     cout<<"total iterations processed: "<<iter<<endl;
     cout<<"solved puzzle:" <<endl;
+}
+
+Row::iterator Sudoku::find(Row &tmpRow, int val)
+{
+    Row::iterator retVal = tmpRow.end();
+    for(auto itr = tmpRow.begin(); itr != tmpRow.end(); ++itr)
+    {
+        if(*itr == val)
+        {
+            retVal = itr;
+        }
+    }
+    return retVal;
 }

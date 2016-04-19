@@ -1,9 +1,12 @@
-/****************************************
+/***************************************
 *Created by: Sudeepth Araveti
 *Date      : 4/19/2016
 *SudokuClass. Puzzle is in the form of
 *this object.
-*****************************************/
+*The puzzle is solved by iterations. 
+*It is solved by basically narrowing possible
+*values for every empty cells.
+****************************************/
 #include "SudokuClass.h"
 #include <math.h>
 

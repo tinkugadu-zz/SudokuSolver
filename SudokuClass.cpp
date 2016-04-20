@@ -10,7 +10,7 @@
 #include "SudokuClass.h"
 #include <math.h>
 
-Sudoku::Sudoku(int siz) : _size(siz)
+Sudoku::Sudoku(int siz) : _size(siz), _cellsFixed(0)
 {
     _sqSize = (int)sqrt((double)siz);
     _puzzle = (int* *)malloc(_size*sizeof(int *));
@@ -303,7 +303,7 @@ void Sudoku::UpdatePossibles(int i, int j)
     auto ind = 0;
     Row::iterator tmpRowIt;
     bool found = false;
-    cout<<"DEBUG: getting into updatePossibles method"<<endl;
+//    cout<<"DEBUG: getting into updatePossibles method"<<endl;
     //update possible values in all columns of that row
     for(auto c=0; c<_size; ++c)
     {
@@ -353,7 +353,7 @@ void Sudoku::UpdatePossibles(int i, int j)
             if(tmpRowIt != it->second.end())  it->second.erase(tmpRowIt);
         }
     }
-    cout<<"DEBUG: RETURN from updatePossibles method"<<endl;
+//    cout<<"DEBUG: RETURN from updatePossibles method"<<endl;
 }
 
 void Sudoku::Solve()
@@ -371,11 +371,11 @@ void Sudoku::Solve()
                 auto ind = it->first;
                 auto row = ind/_size;
                 auto col = ind%_size;
-                cout<<"DEBUG: ["<<row<<" , "<<col<<"] -- "<<it->second.back()<<endl;
-                setVal(row, col, it->second.back());
+//         cout<<"DEBUG: ["<<row<<" , "<<col<<"] -- "<<it->second.back()<<endl;
+                auto tmpVal = it->second.back();
                 nextIter = true;
                 _possibValues.erase(it);
-                UpdatePossibles(row, col);
+                FixValue(row, col, tmpVal);  
             }
         }
         ++iter;
@@ -396,3 +396,22 @@ Row::iterator Sudoku::find(Row &tmpRow, int val)
     }
     return retVal;
 }
+
+void Sudoku::FixValue(int row, int col, int val)
+{
+    //if a value of a cell is resolved, we should also update 
+    //all the possibilities corresponding to the cell.    
+    setVal(row, col, val);
+    ++_cellsFixed;
+    UpdatePossibles(row, col);
+}
+
+#if 0
+void Sudoku::PairRows()
+{
+    for(auto i=0; i<_size; ++i)
+    {
+        
+    }
+}
+#endif

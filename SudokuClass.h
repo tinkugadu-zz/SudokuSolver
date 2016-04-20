@@ -1,12 +1,7 @@
 #ifndef SUDOKU_CLASS_H
 #define SUDOKU_CLASS_H
 #include "utils.h"
-#include <map>
 
-typedef std::vector<int> Row;
-typedef std::vector<Row> Puzzle;
-typedef std::map<int, Row> PROBS;
-typedef unsigned int uint;
 class Sudoku
 {
     Sudoku(Sudoku &cpy) = delete;
@@ -14,6 +9,7 @@ class Sudoku
     int _size;
     int _sqSize;
     int **_puzzle;
+    uint  _cellsFixed;
     bool IsValidRow(int row, bool checkComplete=false);
     bool IsValidColumn(int col, bool checkComplete=false);
     bool IsValidZone(int zone, bool checkComplete=false);
@@ -21,6 +17,7 @@ class Sudoku
     void printTmpArr(int *arr, int size, int i, int j);
     void UpdatePossibles(int i, int j);
     Row::iterator find(Row &tmpRow, int val);
+    void FixValue(int row, int col, int val);
 public:
     Sudoku(int siz);
     ~Sudoku();
@@ -35,5 +32,6 @@ public:
     void FillInitialPossibilities();
     void PrintPossibilities();
     void Solve();
+    inline uint GetCellsFixed() { return _cellsFixed; }
 };
 #endif

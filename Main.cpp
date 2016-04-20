@@ -60,6 +60,7 @@ int main(int argc, char* argv[])
     mySudoku.FillInitialPossibilities();
     mySudoku.PrintPossibilities();
     mySudoku.Solve();
+    cout<<"Total cells fixed: "<<mySudoku.GetCellsFixed()<<endl;
     if(!mySudoku.Valid(true))
     {
         cout<<"The puzzle is not completed yet. :("<<endl;

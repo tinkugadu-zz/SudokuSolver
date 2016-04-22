@@ -69,3 +69,23 @@ Row::iterator Find(Row &tmpRow, int val)
     }
     else return tmpRow.end();
 }
+
+void printPossibles(PROBS &possibles)
+{
+    for(auto it = possibles.begin(); it != possibles.end();
+            ++it)
+    {
+        cout<<"DEBUG::vector for key: "<<it->first<<endl;
+        printVector(it->second);
+        cout<<endl; 
+    }
+}
+
+void printVector(Row &tmpRow)
+{
+    cout<<"DEBUG\t";
+    for(auto it = tmpRow.begin(); it != tmpRow.end(); ++it)
+    {
+        cout<<*it<<"\t";
+    }
+}

@@ -34,7 +34,7 @@ public:
     void printRow(uint row);
     bool Valid(bool checkComplete=false);
     void FillInitialPossibilities();
-    void PrintPossibilities();
+    void printPossibilities();
     void Solve();
     inline uint GetCellsFixed() { return _cellsFixed; }
 };

@@ -15,4 +15,7 @@ typedef unsigned int uint;
 
 void InsertOrder(Row &tmpRow, int val);
 Row::iterator Find(Row &tmpRow, int val);
+void printPossibles(PROBS &possibles);
+void printVector(Row &tmpRow);
+
 #endif //UTILS_H

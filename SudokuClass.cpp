@@ -216,18 +216,16 @@ void Sudoku::FillInitialPossibilities()
     FixUniquePossibles();
 }
 
-void Sudoku::PrintPossibilities()
+void Sudoku::printPossibilities()
 {
-    PROBS::iterator it;
-    Row::iterator rit;
-    for(it = _possibValues.begin(); it != _possibValues.end(); ++it)
+    for(auto it = _possibValues.begin(); it != _possibValues.end(); ++it)
     {
         auto val = it->first;
         auto tmpRow = it->second;
         auto tmpind_i = val/_size + 1;
         auto tmpind_j = val%_size + 1;
         cout<<"possibilities for size: "<<tmpRow.size()<<" at ["<<tmpind_i<<" , "<<tmpind_j<<"] -- ";
-        for(rit = tmpRow.begin(); rit != tmpRow.end(); ++rit)
+        for(auto rit = tmpRow.begin(); rit != tmpRow.end(); ++rit)
         {
             cout<<*rit<<"\t";
         }
@@ -367,9 +365,16 @@ void Sudoku::Solve()
     while(nextIter)
     {
         nextIter = false;
+        cout<<"DEBUG:: number of possibles: "<<_possibValues.size()<<endl;
         for(auto it = _possibValues.begin(); it != _possibValues.end();
                 ++it)
         {
+            if(it->second.empty())
+            {
+            //if the vector is empty delete it., save iteration
+                _possibValues.erase(it);
+                continue;
+            }
             if(it->second.size() == 1)
             {
                 auto ind = it->first;
@@ -378,7 +383,7 @@ void Sudoku::Solve()
 //         cout<<"DEBUG: ["<<row<<" , "<<col<<"] -- "<<it->second.back()<<endl;
                 auto tmpVal = it->second.back();
                 nextIter = true;
-                _possibValues.erase(it);
+//                _possibValues.erase(it);
                 FixValue(row, col, tmpVal);
             }
         }
@@ -407,6 +412,7 @@ void Sudoku::FixValue(int row, int col, int val)
     //all the possibilities corresponding to the cell.    
     setVal(row, col, val);
     ++_cellsFixed;
+    _possibValues.erase(row*_size + col);
     UpdatePossibles(row, col);
 }
 
@@ -484,7 +490,7 @@ void Sudoku::FixUniqueValuesZone(int zone)
     {
         for(auto jj=col_st; jj<=col_end; ++jj)
         {
-            if(_puzzle[ii][jj] == 0) continue;            
+            if(_puzzle[ii][jj] != 0) continue;            
             auto key = ii*_size + jj;
             auto tmpRow = _possibValues[key];
             for(auto it = tmpRow.begin(); it != tmpRow.end();

@@ -13,4 +13,6 @@ typedef std::vector<int> Row;
 typedef std::map<int, Row> PROBS;
 typedef unsigned int uint;
 
+void InsertOrder(Row &tmpRow, int val);
+Row::iterator Find(Row &tmpRow, int val);
 #endif //UTILS_H

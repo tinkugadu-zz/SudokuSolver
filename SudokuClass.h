@@ -18,6 +18,10 @@ class Sudoku
     void UpdatePossibles(int i, int j);
     Row::iterator find(Row &tmpRow, int val);
     void FixValue(int row, int col, int val);
+    void FixUniquePossibles();
+    void FixUniqueValuesRow(int ind);
+    void FixUniqueValuesColumn(int ind);
+    void FixUniqueValuesZone(int zone);
 public:
     Sudoku(int siz);
     ~Sudoku();

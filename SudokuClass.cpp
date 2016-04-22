@@ -96,7 +96,8 @@ bool Sudoku::Valid(bool checkComplete)
 
 bool Sudoku::IsValidRow(int row, bool checkComplete)
 {
-    int tmpArr[] = {0,0,0,0,0,0,0,0,0};
+//    int tmpArr[] = {0,0,0,0,0,0,0,0,0};
+    Row tmpArr(_size, 0);
     for(int i=0; i<_size; ++i)
     {
         auto ind = _puzzle[row][i];
@@ -127,7 +128,7 @@ bool Sudoku::IsValidRow(int row, bool checkComplete)
 
 bool Sudoku::IsValidColumn(int col, bool checkComplete)
 {
-    int tmpArr[] = {0,0,0,0,0,0,0,0,0};
+    Row tmpArr(_size, 0);
     for(int i=0; i<_size; ++i)
     {
         auto ind = _puzzle[i][col];
@@ -158,7 +159,8 @@ bool Sudoku::IsValidColumn(int col, bool checkComplete)
 
 bool Sudoku::IsValidZone(int zone, bool checkComplete)
 {
-    int tmpArr[] = {0,0,0,0,0,0,0,0,0};
+//    int tmpArr[] = {0,0,0,0,0,0,0,0,0};
+    Row tmpArr(_size, 0);
     int row = zone/_sqSize;
     int col = zone%_sqSize;
     auto row_st = row*_sqSize;
@@ -211,6 +213,7 @@ void Sudoku::FillInitialPossibilities()
             _possibValues[(i*_size)+j] = getPossibles(i, j);
         }
     }
+    FixUniquePossibles();
 }
 
 void Sudoku::PrintPossibilities()
@@ -235,7 +238,8 @@ void Sudoku::PrintPossibilities()
 Row Sudoku::getPossibles(int i, int j)
 {
     //              1,2,3,4,5,6,7,8,9
-    int tmpArr[] = {0,0,0,0,0,0,0,0,0};
+//    int tmpArr[] = {0,0,0,0,0,0,0,0,0};
+    Row tmpArr(_size, 0);
     Row tmpRow;
     if(_puzzle[i][j] != 0)
     {
@@ -274,7 +278,7 @@ Row Sudoku::getPossibles(int i, int j)
                 continue;
             }
             ++tmpArr[_puzzle[r][c]-1];
-//            cout<<"DEBUG: puzzle["<<r<<" , "<<c<<"] -- "<<_puzzle[r][c]<<endl;
+//          cout<<"DEBUG: puzzle["<<r<<" , "<<c<<"] -- "<<_puzzle[r][c]<<endl;
         }
     }
 //    printTmpArr(tmpArr, 9, i, j);
@@ -375,7 +379,7 @@ void Sudoku::Solve()
                 auto tmpVal = it->second.back();
                 nextIter = true;
                 _possibValues.erase(it);
-                FixValue(row, col, tmpVal);  
+                FixValue(row, col, tmpVal);
             }
         }
         ++iter;
@@ -406,11 +410,106 @@ void Sudoku::FixValue(int row, int col, int val)
     UpdatePossibles(row, col);
 }
 
+void Sudoku::FixUniquePossibles()
+{
+    //check all rows and columns for unique possibles
+    for(auto i=0; i<_size; ++i)
+    {
+        FixUniqueValuesRow(i);
+        FixUniqueValuesColumn(i);
+        FixUniqueValuesZone(i);
+    }
+}
+
+void Sudoku::FixUniqueValuesRow(int ind)
+{
+    PROBS possibCells;
+    for(auto col=0; col<_size; ++col)
+    {
+        if(_puzzle[ind][col] != 0) continue;
+        auto key = ind*_size + col;
+        auto tmpRow = _possibValues[key];
+        for(auto it = tmpRow.begin(); it != tmpRow.end();
+                ++it)
+        {
+            possibCells[*it].push_back(key);
+        }
+    }
+    for(auto itMap = possibCells.begin(); itMap!= possibCells.end();
+            ++itMap)
+    {
+        if(itMap->second.size() == 1)
+        {
+            FixValue(itMap->second.back()/_size,
+                itMap->second.back()%_size, itMap->first);
+        }
+    }
+}
+
+void Sudoku::FixUniqueValuesColumn(int ind)
+{
+    PROBS possibCells;
+    for(auto row=0; row<_size; ++row)
+    {
+        if(_puzzle[row][ind] != 0) continue;
+        auto key = row*_size + ind;
+        auto tmpRow = _possibValues[key];
+        for(auto it = tmpRow.begin(); it != tmpRow.end();
+                    ++it)
+        {
+            possibCells[*it].push_back(key);
+        }
+    }
+    for(auto itMap = possibCells.begin(); itMap!= possibCells.end();
+                ++itMap)
+    {
+        if(itMap->second.size() == 1)
+        {
+            FixValue(itMap->second.back()/_size, 
+                itMap->second.back()%_size, itMap->first);
+        }
+    }
+}
+
+void Sudoku::FixUniqueValuesZone(int zone)
+{
+    auto row = zone/_sqSize;
+    auto col = zone%_sqSize;
+    auto row_st = row*_sqSize;
+    auto row_end = row_st + _sqSize -1;
+    auto col_st = col*_sqSize;
+    auto col_end = col_st + _sqSize -1;
+    PROBS possibCells;
+    for(auto ii=row_st; ii<=row_end; ++ii)
+    {
+        for(auto jj=col_st; jj<=col_end; ++jj)
+        {
+            if(_puzzle[ii][jj] == 0) continue;            
+            auto key = ii*_size + jj;
+            auto tmpRow = _possibValues[key];
+            for(auto it = tmpRow.begin(); it != tmpRow.end();
+                   ++it)
+            {
+                possibCells[*it].push_back(key);
+            }
+        }
+    }
+    for(auto itMap = possibCells.begin(); itMap!= possibCells.end();
+              ++itMap)
+    {
+        if(itMap->second.size() == 1)
+        {
+            FixValue(itMap->second.back()/_size, itMap->second.back()%_size,
+                    itMap->first);
+        }
+    }
+}
 #if 0
 void Sudoku::PairRows()
 {
     for(auto i=0; i<_size; ++i)
     {
+        if(_puzzle[ind][col] == 0) continue;
         
     }
 }
